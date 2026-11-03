@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
+import org.cibseven.bpm.engine.OptimisticLockingException;
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.batch.Batch;
 import org.cibseven.bpm.engine.repository.ProcessDefinition;
@@ -413,7 +414,8 @@ public class CibSevenSuspensionTest {
 
   /**
    * Runs the jobs of one job definition, next to the job executor. Whichever of the two takes a
-   * job first runs it. The other one finds it gone, or half gone, which is no failure here.
+   * job first runs it. The other one finds it gone, half gone or still busy, which is no failure
+   * here.
    */
   private void runTheJobsOf(
       final String jobDefinitionId) {
@@ -428,8 +430,13 @@ public class CibSevenSuspensionTest {
           .forEach(job -> {
             try {
               engine.getManagementService().executeJob(job.getId());
+            } catch (final OptimisticLockingException e) {
+              // The job executor ran the same job at the same moment and changed a row which
+              // this run wanted to change too. So the job may still be there when we ask, even
+              // though nothing failed for real. The loop looks at the job again on its next
+              // round and gives up only after its deadline.
             } catch (final RuntimeException e) {
-              // The job executor ran it first. Depending on how far it got, CIB seven throws a
+              // The job executor ran it first. Depending on how far it got, the engine throws a
               // ProcessEngineException or a NullPointerException for the configuration it
               // already deleted. Only a job which is still there failed for real.
               if (engine.getManagementService().createJobQuery().jobId(job.getId()).count() > 0) {
