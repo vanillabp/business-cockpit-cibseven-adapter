@@ -17,7 +17,7 @@
   <packaging>pom</packaging>
   <name>VanillaBP Business Cockpit adapter for CIB seven</name>
   <description>Business Cockpit integration for CIB seven, built as a VanillaBP 2 extension.</description>
-  <url>https://github.com/vanillabp/businesscockpit-cibseven-adapter</url>
+  <url>https://github.com/vanillabp/business-cockpit-cibseven-adapter</url>
 
   <modules>
     <module>core</module>
@@ -32,9 +32,9 @@
   </modules>
 
   <scm>
-    <connection>scm:git:https://github.com/vanillabp/businesscockpit-cibseven-adapter.git</connection>
-    <developerConnection>scm:git:https://github.com/vanillabp/businesscockpit-cibseven-adapter.git</developerConnection>
-    <url>https://github.com/vanillabp/businesscockpit-cibseven-adapter/tree/main</url>
+    <connection>scm:git:https://github.com/vanillabp/business-cockpit-cibseven-adapter.git</connection>
+    <developerConnection>scm:git:https://github.com/vanillabp/business-cockpit-cibseven-adapter.git</developerConnection>
+    <url>https://github.com/vanillabp/business-cockpit-cibseven-adapter/tree/main</url>
   </scm>
 
   <properties>
