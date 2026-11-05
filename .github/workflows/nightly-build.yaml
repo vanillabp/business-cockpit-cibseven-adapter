@@ -21,7 +21,7 @@ name: Nightly build
 # A red night becomes an issue with the label 'nightly-build'. A night which is still red
 # gets a comment on that issue, never a second issue. A green night after a red one gets a
 # comment too, and the issue stays open until somebody closes it. The same pattern as the
-# nightly release-line matrix of businesscockpit-camunda8-adapter.
+# nightly release-line matrix of business-cockpit-camunda8-adapter.
 "on":
   schedule:
     # A crooked minute, because GitHub's queue is longest on the hour, and not the minute of
