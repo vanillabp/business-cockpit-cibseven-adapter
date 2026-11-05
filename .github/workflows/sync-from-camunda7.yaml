@@ -133,7 +133,7 @@ jobs:
           fi
           {
             echo "The code made again from the Business Cockpit extension for Camunda 7 at"
-            echo "vanillabp/businesscockpit-camunda7-adapter@${C7_SHA}."
+            echo "vanillabp/business-cockpit-camunda7-adapter@${C7_SHA}."
             echo
             if [ "$CONFLICTS" = "true" ]; then
               echo "The merge into \`main\` has conflicts, so this pull request comes from \`generated\`"
