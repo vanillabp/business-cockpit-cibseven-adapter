@@ -12,8 +12,8 @@
 #
 # CIB seven publishes a recipe of its own, 'org.cibseven.ReplaceCamundaWithCIBSeven'. It is
 # not used, for the same reason the CIB seven adapter does not use it: it renames every
-# 'org.camunda', so it would also rename the groupId 'org.camunda.community.vanillabp' of the
-# Camunda 7 adapter.
+# 'org.camunda', so it would also rename the FEEL engine 'org.camunda.feel', which CIB seven
+# shares with Camunda.
 #
 # What stays as it is: the BPMN namespace 'http://camunda.org/schema/1.0/bpmn' and every
 # 'camunda:' attribute, because CIB seven reads only that namespace.
@@ -212,18 +212,6 @@ description: >-
   What no Java recipe of this file sees. Strings, comments, POMs, YAML, properties, service
   files and the imports of the CIB seven adapter's classes.
 recipeList:
-  # The repository of the Camunda 7 adapter first, before 'camunda7' below turns it into a
-  # name nobody uses.
-  - org.openrewrite.text.FindAndReplace:
-      find: camunda-community-hub/vanillabp-camunda7-adapter
-      replace: vanillabp/cibseven-adapter
-      caseSensitive: true
-  # The groupId of the Camunda 7 adapter. The Camunda Community Hub owns
-  # 'org.camunda.community', and the CIB seven adapter is published as 'io.vanillabp'.
-  - org.openrewrite.text.FindAndReplace:
-      find: org.camunda.community.vanillabp
-      replace: io.vanillabp
-      caseSensitive: true
   # Class names. The CIB seven adapter names its classes the way this rule does, so
   # 'io.vanillabp.camunda7.api.Camunda7EngineFacts' becomes
   # 'io.vanillabp.cibseven.api.CibSevenEngineFacts' together with the rule below. These
@@ -255,9 +243,9 @@ recipeList:
       regex: true
   # 'Camunda' alone means the engine the extension listens to: 'the version Camunda counted',
   # 'a Camunda tenant', 'Camunda's levels'. A name with a number stays, such as 'Camunda 8'
-  # and what the rule above kept of 'Camunda 7'. So does the Camunda Community Hub.
+  # and what the rule above kept of 'Camunda 7'.
   - org.openrewrite.text.FindAndReplace:
-      find: '\bCamunda\b(?!\s*\d| Community)'
+      find: '\bCamunda\b(?!\s*\d)'
       replace: CIB seven
       caseSensitive: true
       regex: true
