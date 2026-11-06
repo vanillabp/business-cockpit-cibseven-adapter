@@ -29,7 +29,7 @@ permissions:
 concurrency:
   # Two syncs at the same time would both push to 'generated'. The build of a sync publishes
   # nothing, so it does not need the group of the publish of main.
-  group: businesscockpit-cibseven-adapter-sync
+  group: business-cockpit-cibseven-adapter-sync
   cancel-in-progress: false
 jobs:
   sync:
@@ -63,11 +63,6 @@ jobs:
         id: sync
         env:
           REQUESTED: "${{ github.event.inputs.camunda7-ref }}"
-          # the recipe resolves the dependencies of the Camunda 7 extension, and one of them is
-          # the Camunda 7 adapter in the GitHub Packages registry of the Camunda Community Hub
-          MAVEN_ARGS: "-s ${{ github.workspace }}/.github/workflows/github-packages-settings.xml"
-          USER_NAME: "${{ secrets.VANILLABP_USER_NAME }}"
-          USER_TOKEN: "${{ secrets.VANILLABP_USER_TOKEN }}"
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -107,11 +102,7 @@ jobs:
         id: build
         if: "${{ steps.merge.outputs.conflicts == 'false' }}"
         continue-on-error: true
-        run: mvn -s $GITHUB_WORKSPACE/.github/workflows/github-packages-settings.xml
-          --batch-mode --no-transfer-progress --update-snapshots install
-        env:
-          USER_NAME: "${{ secrets.VANILLABP_USER_NAME }}"
-          USER_TOKEN: "${{ secrets.VANILLABP_USER_TOKEN }}"
+        run: mvn --batch-mode --no-transfer-progress --update-snapshots install
       - name: Open the pull request
         if: "${{ steps.sync.outputs.changed == 'true' }}"
         env:

@@ -58,7 +58,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.camunda.community.vanillabp</groupId>
+      <groupId>io.vanillabp</groupId>
       <artifactId>camunda7-adapter-spring-boot</artifactId>
       <version>${camunda7-adapter.version}</version>
       <scope>test</scope>
