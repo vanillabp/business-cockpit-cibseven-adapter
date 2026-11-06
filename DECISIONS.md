@@ -46,6 +46,10 @@ the Camunda 8 adapter.
 
 ### 3. The code is made from the Camunda 7 extension, and a merge brings each change over
 
+**Partly superseded by decision 6.** The Camunda 7 adapter no longer has the groupId
+`org.camunda.community.vanillabp`, so that part of the reason against
+`org.cibseven.ReplaceCamundaWithCIBSeven` is gone. Decision 6 says why the recipe is still not used.
+
 The Camunda 7 extension keeps changing, and nearly all of its changes are wanted here too. Porting
 each of them by hand would cost the most and would miss some. So the code is made again from a commit
 of the Camunda 7 extension whenever it is to follow. This is the procedure of the CIB seven adapter,
@@ -81,26 +85,33 @@ which can conflict in a merge.
 
 ### 4. The extension has a name of its own everywhere
 
+**Partly superseded by decision 6.** The Camunda 7 adapter has the groupId `io.vanillabp` now. The
+row "adapter it plugs into" below shows the old groupId.
+
 The extension must be able to run next to the Camunda 7 extension in one application. That is how
 an application moves from Camunda 7 to CIB seven. Two classes with the same name on one classpath,
 two Spring auto-configurations with the same name, or two Quarkus extensions with the same name
 break that. So nothing of this extension carries the name of the Camunda 7 extension:
 
-|          What          |          Camunda 7 extension          |            This extension             |
-|------------------------|---------------------------------------|---------------------------------------|
-| Maven groupId          | `io.vanillabp.businesscockpit`        | `io.vanillabp.businesscockpit`        |
-| artifactIds            | `businesscockpit-camunda7-adapter...` | `businesscockpit-cibseven-adapter...` |
-| Java package           | `io.vanillabp.cockpit.camunda7`       | `io.vanillabp.cockpit.cibseven`       |
-| class names            | `Camunda7...`                         | `CibSeven...`                         |
-| Quarkus extension      | `vanillabp-business-cockpit-camunda7` | `vanillabp-business-cockpit-cibseven` |
-| adapter it plugs into  | `io.vanillabp:camunda7-adapter...`    | `io.vanillabp:cibseven-adapter...`    |
-| adapter type it serves | `camunda7`                            | `cibseven`                            |
+|          What          |                  Camunda 7 extension                  |            This extension             |
+|------------------------|-------------------------------------------------------|---------------------------------------|
+| Maven groupId          | `io.vanillabp.businesscockpit`                        | `io.vanillabp.businesscockpit`        |
+| artifactIds            | `businesscockpit-camunda7-adapter...`                 | `businesscockpit-cibseven-adapter...` |
+| Java package           | `io.vanillabp.cockpit.camunda7`                       | `io.vanillabp.cockpit.cibseven`       |
+| class names            | `Camunda7...`                                         | `CibSeven...`                         |
+| Quarkus extension      | `vanillabp-business-cockpit-camunda7`                 | `vanillabp-business-cockpit-cibseven` |
+| adapter it plugs into  | `org.camunda.community.vanillabp:camunda7-adapter...` | `io.vanillabp:cibseven-adapter...`    |
+| adapter type it serves | `camunda7`                                            | `cibseven`                            |
 
 The groupId stays the one of the Business Cockpit, like the other extensions. The recipe
 `rewrite/vanillabp-cibseven.yml` writes all of these names, so a sync keeps them. The module
 `migration-tests` runs both extensions in one application (decision 5).
 
 ### 5. The tests with the Camunda 7 extension are a module of their own
+
+**Partly superseded by decision 6.** The Camunda 7 adapter comes from Maven Central now. The second
+reason below, the login for GitHub Packages, is gone. The module stays a module of its own for the
+first reason.
 
 `migration-tests` runs this extension and the Camunda 7 extension in one application, each with its
 adapter and its engine. It has one submodule per platform, `migration-tests/spring-boot` and
@@ -109,11 +120,13 @@ the reasons the CIB seven adapter gives in its decision 8:
 
 - `spring-boot` and `quarkus` come from the Camunda 7 extension. Their POMs change with every sync,
   and a module of this repository's own never meets a conflict there.
-- The Camunda 7 adapter is a dependency only this module has. A module of its own keeps it in one
-  place, and every module before it builds without it.
+- The Camunda 7 adapter is a snapshot, and its snapshots are only in the GitHub Packages registry of
+  the Camunda Community Hub, which wants a login even for reading. A module of its own keeps that
+  need to one place. Every module before it builds without the login.
 
-The module reads the snapshots of the Camunda 7 adapter from the snapshot repository of Maven
-Central, like every other dependency. That needs no login.
+The module names that registry under the id `vanillabp-camunda7-adapter`. A
+build needs a server entry with that id and a token with `read:packages`. Once the Camunda 7 adapter
+has a release on Maven Central, the registry goes away.
 
 Each engine gets a datasource of its own. Two engines on one set of tables are refused, and the CIB
 seven adapter checks that across the adapter types as well. On Quarkus both datasources are XA
@@ -127,3 +140,23 @@ Central with `excludeArtifacts`, because the publishing plugin stops the whole p
 of the reactor assigns no file. They have no coverage of their own in the reports. Their tests cover
 code which `spring-boot` and `quarkus` already cover, and they would add the classes of the Camunda 7
 extension to the reports.
+
+### 6. The Camunda 7 adapter comes from Maven Central as `io.vanillabp`
+
+It changes decisions 3, 4 and 5.
+
+The Camunda 7 adapter is built in `vanillabp/camunda7-adapter` again. Its artifacts have the groupId
+`io.vanillabp`, and its snapshots go to the snapshot repository of Maven Central. Reading them needs
+no login. The copy in the Camunda Community Hub is frozen and holds only version 1.
+
+- Decision 3: `org.cibseven.ReplaceCamundaWithCIBSeven` is still not used. It renames every
+  `org.camunda`, and so it would rename the FEEL engine `org.camunda.feel`, which CIB seven shares
+  with Camunda. It also does not know the package of the extension elements. The CIB seven adapter
+  gives the same reasons in its decisions 2 and 9.
+- Decision 4: the extension plugs into `io.vanillabp:camunda7-adapter...`. Both adapters have the
+  groupId `io.vanillabp`, and the artifactIds keep them apart.
+- Decision 5: `migration-tests` takes the Camunda 7 adapter from the snapshot repository of Maven
+  Central, like every other VanillaBP snapshot. There is no GitHub Packages registry, no server
+  entry and no token any more. The module stays a module of its own, because the POMs of
+  `spring-boot` and `quarkus` change with every sync.
+
