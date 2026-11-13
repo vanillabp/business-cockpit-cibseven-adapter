@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.cibseven.bpm.engine.delegate.DelegateTask;
 import org.cibseven.bpm.engine.delegate.TaskListener;
+import org.cibseven.bpm.engine.history.HistoricProcessInstance;
 import org.cibseven.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity;
 import org.cibseven.bpm.engine.impl.history.event.HistoricTaskInstanceEventEntity;
 import org.cibseven.bpm.engine.impl.history.event.HistoryEventTypes;
@@ -237,25 +238,33 @@ public class CibSevenCockpitEventsTest {
   }
 
   @Test
-  @DisplayName("An ended workflow is completed, and cancelled where something ended it from outside")
+  @DisplayName("An ended workflow is completed, and cancelled where the engine terminated it, with or without a reason")
   public void anEndedWorkflowIsCompletedOrCancelled() {
 
     final var completed = anInstanceEvent(
         HistoryEventTypes.PROCESS_INSTANCE_END, MODULE_ID, BPMN_PROCESS_ID, "4711");
     completed.setEndTime(new Date());
+    completed.setState(HistoricProcessInstance.STATE_COMPLETED);
     final var cancelled = anInstanceEvent(
         HistoryEventTypes.PROCESS_INSTANCE_END, MODULE_ID, BPMN_PROCESS_ID, "4712");
     cancelled.setEndTime(new Date());
+    cancelled.setState(HistoricProcessInstance.STATE_EXTERNALLY_TERMINATED);
     cancelled.setDeleteReason("an operator deleted it");
+    final var withoutAReason = anInstanceEvent(
+        HistoryEventTypes.PROCESS_INSTANCE_END, MODULE_ID, BPMN_PROCESS_ID, "4714");
+    withoutAReason.setEndTime(new Date());
+    withoutAReason.setState(HistoricProcessInstance.STATE_INTERNALLY_TERMINATED);
     final var updated = anInstanceEvent(
         HistoryEventTypes.PROCESS_INSTANCE_UPDATE, MODULE_ID, BPMN_PROCESS_ID, "4713");
 
     final var handler = new CibSevenWorkflowHistoryHandler(events);
-    handler.handleEvents(List.of(completed, cancelled, updated));
+    handler.handleEvents(List.of(completed, cancelled, withoutAReason, updated));
 
     assertEquals(
         List
-            .of(WorkflowEventKind.COMPLETED, WorkflowEventKind.CANCELLED, WorkflowEventKind.UPDATED),
+            .of(
+                WorkflowEventKind.COMPLETED, WorkflowEventKind.CANCELLED, WorkflowEventKind.CANCELLED,
+                WorkflowEventKind.UPDATED),
         publisher.workflowKinds());
 
   }
