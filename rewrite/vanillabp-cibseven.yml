@@ -50,6 +50,9 @@ recipeList:
       oldFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.Camunda7CockpitWiring
       newFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.CibSevenCockpitWiring
   - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.Camunda7Deletions
+      newFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.CibSevenDeletions
+  - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.Camunda7EventBeingReported
       newFullyQualifiedTypeName: io.vanillabp.cockpit.camunda7.CibSevenEventBeingReported
   - org.openrewrite.java.ChangeType:
