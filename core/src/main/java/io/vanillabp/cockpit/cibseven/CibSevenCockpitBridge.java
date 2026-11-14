@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.delegate.DelegateTask;
+import org.cibseven.bpm.engine.delegate.TaskListener;
 import org.cibseven.bpm.engine.history.HistoricProcessInstance;
 import org.cibseven.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.cibseven.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity;
@@ -351,6 +352,7 @@ public class CibSevenCockpitBridge implements BusinessCockpitBpmsBridge {
         .multiInstances(
             multiInstancesOf(
                 CibSevenMultiInstances.of(task.getExecution(), engineFacts.taskRegistry())))
+        .comment(commentOfTheEvent(task))
         .build();
 
   }
@@ -380,7 +382,32 @@ public class CibSevenCockpitBridge implements BusinessCockpitBpmsBridge {
     return new WorkflowDetailsPrefill(
         versionOf(event.getProcessDefinitionId()), event.getBusinessKey(), (name == null) || name.isBlank()
             ? bpmnProcessId
-            : name, event.getStartUserId(), atOffset(event.getStartTime()));
+            : name, event.getStartUserId(), atOffset(event.getStartTime()), null, null, commentOfTheEvent(event));
+
+  }
+
+  /**
+   * The reason somebody gave while deleting the process instance of a task. Only the deletion of
+   * a task carries one. See {@link CibSevenDeletions} for when it counts.
+   */
+  private static String commentOfTheEvent(
+      final DelegateTask task) {
+
+    if (!TaskListener.EVENTNAME_DELETE.equals(task.getEventName())) {
+      return null;
+    }
+    return CibSevenDeletions.commentOfADeletedTask(task.getDeleteReason());
+
+  }
+
+  /**
+   * The reason somebody gave while deleting a process instance. See {@link CibSevenDeletions}
+   * for when it counts.
+   */
+  private static String commentOfTheEvent(
+      final HistoricProcessInstanceEventEntity event) {
+
+    return CibSevenDeletions.commentOf(event);
 
   }
 
