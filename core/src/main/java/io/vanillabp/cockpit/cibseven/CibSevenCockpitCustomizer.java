@@ -19,7 +19,7 @@ import io.vanillabp.cibseven.api.CibSevenEngineFacts;
 import io.vanillabp.cibseven.engine.CibSevenEngineCustomizer;
 import io.vanillabp.cockpit.extension.spi.BusinessCockpitEventPublisher;
 import io.vanillabp.cockpit.extension.spi.EventTransaction;
-import io.vanillabp.integration.adapter.spi.NameClashAvoidanceSupport;
+import io.vanillabp.integration.spi.IdentifierScoping;
 
 /**
  * What the Business Cockpit adds to every CIB seven engine VanillaBP builds.
@@ -58,7 +58,7 @@ public class CibSevenCockpitCustomizer implements CibSevenEngineCustomizer {
 
   private final CibSevenWorkflowProcesses processes;
 
-  private final NameClashAvoidanceSupport scoping;
+  private final IdentifierScoping scoping;
 
   private final Supplier<List<CibSevenEngineFacts>> engines;
 
@@ -88,7 +88,7 @@ public class CibSevenCockpitCustomizer implements CibSevenEngineCustomizer {
    */
   public CibSevenCockpitCustomizer(
       final CibSevenWorkflowProcesses processes,
-      final NameClashAvoidanceSupport scoping,
+      final IdentifierScoping scoping,
       final Supplier<List<CibSevenEngineFacts>> engines,
       final Supplier<BusinessCockpitEventPublisher> publisher) {
 
