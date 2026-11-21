@@ -45,8 +45,8 @@
     <!-- the VanillaBP CIB seven adapter this extension plugs into: it names the processing
          context the extension is wired with, and its engine is the one the extension adds its
          listeners to -->
-    <cibseven-adapter.version>2.0.0-2.2-SNAPSHOT</cibseven-adapter.version>
-    <cibseven.version>2.2.0</cibseven.version>
+    <cibseven-adapter.version>2.0.0-3.0-SNAPSHOT</cibseven-adapter.version>
+    <cibseven.version>3.0.0</cibseven.version>
     <!-- the Business Cockpit itself: extensions-commons is the platform-neutral half of
          this extension and is consumed as a published artifact, never copied -->
     <business-cockpit.version>0.9.0-SNAPSHOT</business-cockpit.version>
