@@ -27,7 +27,7 @@ extension SPI of `adapter-platform-integration`, on the cockpit's `extensions-co
 [VanillaBP CIB seven adapter](https://github.com/vanillabp/cibseven-adapter). All of them are still
 snapshots, so this repository is one too.
 
-It is built and tested with `io.vanillabp:cibseven-adapter` 2.0.0-2.2-SNAPSHOT and CIB seven 2.2.0.
+It is built and tested with `io.vanillabp:cibseven-adapter` 2.0.0-3.0-SNAPSHOT and CIB seven 3.0.0.
 The adapter carries the CIB seven minor in its version, and this extension pins the same CIB seven
 release the adapter pins (decision 2 in the repository's [`DECISIONS.md`](./DECISIONS.md)).
 
@@ -98,8 +98,8 @@ get in each other's way (decision 4).
 Give each engine a datasource of its own. Two engines on one set of tables are refused. On Quarkus
 both datasources have to be XA datasources (`quarkus.datasource.<name>.jdbc.transactions: xa`),
 because VanillaBP's outbox starts a workflow on the second engine in a transaction which also writes
-the application's datasource (decision 5). Camunda 7.24 and CIB seven 2.2 bring the same FEEL
-engine, so nothing has to be excluded.
+the application's datasource (decision 5). Camunda 7.24 and CIB seven 3.0 bring the same FEEL
+engine, 1.19.3 and 1.19.6. One copy, 1.19.6, serves both engines, so nothing has to be excluded.
 
 The module `migration-tests` does exactly this, once per platform. `CibSevenNextToCamunda7Test` runs
 a user task on each engine and checks that the cockpit hears of each of them once, through the

@@ -50,8 +50,8 @@
       <scope>test</scope>
     </dependency>
     <!-- the Business Cockpit extension for Camunda 7 and its adapter, which the test runs next
-         to this extension. Camunda 7.24 and CIB seven 2.2 bring the same FEEL engine, so
-         nothing has to be excluded -->
+         to this extension. Camunda 7.24 and CIB seven 3.0 bring the same FEEL engine, 1.19.3
+         and 1.19.6. One copy serves both, so nothing has to be excluded -->
     <dependency>
       <groupId>io.vanillabp.businesscockpit</groupId>
       <artifactId>businesscockpit-camunda7-adapter-quarkus-deployment</artifactId>
