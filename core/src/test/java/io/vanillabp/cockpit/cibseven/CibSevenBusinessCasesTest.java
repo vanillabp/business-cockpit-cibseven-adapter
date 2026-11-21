@@ -22,7 +22,7 @@ import io.vanillabp.cibseven.api.CibSevenEngineFacts;
 import io.vanillabp.cibseven.wiring.CibSevenTaskRegistry;
 import io.vanillabp.integration.adapter.migration.config.MigrationAdapterProperties;
 import io.vanillabp.integration.adapter.migration.scoping.NameClashAvoidanceService;
-import io.vanillabp.integration.adapter.spi.workflowtask.WorkflowTaskWiring;
+import io.vanillabp.integration.spi.workflowtask.WorkflowTaskClaims;
 import io.vanillabp.integration.test.utils.SuppressOutputExtension;
 
 /**
@@ -58,7 +58,7 @@ public class CibSevenBusinessCasesTest {
     processes.register(MODULE_ID, ORDER);
     processes.register(MODULE_ID, SHIPPING);
     processes.register(MODULE_ID, PACKING);
-    final var core = mock(WorkflowTaskWiring.class);
+    final var core = mock(WorkflowTaskClaims.class);
     for (final var calling : Set.of(ORDER, SHIPPING, PACKING)) {
       for (final var called : Set.of(ORDER, SHIPPING, PACKING)) {
         when(core.workflowsShareTheWorkflowAggregate(MODULE_ID, calling, called))

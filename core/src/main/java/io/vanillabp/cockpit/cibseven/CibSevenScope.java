@@ -3,7 +3,7 @@ package io.vanillabp.cockpit.cibseven;
 import java.util.function.Supplier;
 
 import io.vanillabp.cibseven.api.CibSevenEngineFacts;
-import io.vanillabp.integration.adapter.spi.NameClashAvoidanceSupport;
+import io.vanillabp.integration.spi.IdentifierScoping;
 
 /**
  * How one configured CIB seven engine names the things the extension asks it about.
@@ -31,7 +31,7 @@ public final class CibSevenScope {
 
   private final String adapterId;
 
-  private final NameClashAvoidanceSupport scoping;
+  private final IdentifierScoping scoping;
 
   private final Supplier<CibSevenEngineFacts> engine;
 
@@ -44,7 +44,7 @@ public final class CibSevenScope {
    */
   public CibSevenScope(
       final String adapterId,
-      final NameClashAvoidanceSupport scoping,
+      final IdentifierScoping scoping,
       final Supplier<CibSevenEngineFacts> engine) {
 
     this.adapterId = adapterId;
@@ -121,7 +121,7 @@ public final class CibSevenScope {
       final String workflowModuleId,
       final String bpmnProcessId) {
 
-    return NameClashAvoidanceSupport
+    return IdentifierScoping
         .scopedProcessId(scoping, workflowModuleId, bpmnProcessId, adapterId);
 
   }

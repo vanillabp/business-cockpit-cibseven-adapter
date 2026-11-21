@@ -15,10 +15,10 @@ import io.vanillabp.cockpit.cibseven.CibSevenCockpitWiring;
 import io.vanillabp.cockpit.cibseven.CibSevenWorkflowProcesses;
 import io.vanillabp.cockpit.extension.spi.BusinessCockpitBpmsBridge;
 import io.vanillabp.cockpit.extension.spi.BusinessCockpitEventPublisher;
-import io.vanillabp.integration.adapter.migration.config.MigrationAdapterProperties;
-import io.vanillabp.integration.adapter.spi.NameClashAvoidanceSupport;
-import io.vanillabp.integration.adapter.spi.workflowtask.WorkflowTaskWiring;
 import io.vanillabp.integration.extension.spi.ExtensionWiringService;
+import io.vanillabp.integration.extension.spi.settings.VanillaBpSettings;
+import io.vanillabp.integration.spi.IdentifierScoping;
+import io.vanillabp.integration.spi.workflowtask.WorkflowTaskClaims;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
@@ -63,7 +63,7 @@ public class CibSevenCockpitProducer {
    * Produces this extension's wiring service.
    *
    * @param processes The claimed processes
-   * @param workflowTaskWiring VanillaBP's registry, which answers whether a
+   * @param workflowTaskClaims VanillaBP's registry, which answers whether a
    *          <code>&#64;WorkflowService</code> claims a process
    * @param publisher The extension, which is told the user tasks of every wired model. It is
    *          resolved when the first model is wired
@@ -75,10 +75,10 @@ public class CibSevenCockpitProducer {
   @Unremovable
   public ExtensionWiringService<BpmnModelInstance, CibSevenProcessingContext> businessCockpitCibSevenWiringService(
       final CibSevenWorkflowProcesses processes,
-      final WorkflowTaskWiring workflowTaskWiring,
+      final WorkflowTaskClaims workflowTaskClaims,
       final Instance<BusinessCockpitEventPublisher> publisher) {
 
-    return new CibSevenCockpitWiring(processes, workflowTaskWiring, publisher::get);
+    return new CibSevenCockpitWiring(processes, workflowTaskClaims, publisher::get);
 
   }
 
@@ -100,7 +100,7 @@ public class CibSevenCockpitProducer {
   @Unremovable
   public CibSevenCockpitCustomizer businessCockpitCibSevenEngineCustomizer(
       final CibSevenWorkflowProcesses processes,
-      final NameClashAvoidanceSupport scoping,
+      final IdentifierScoping scoping,
       final Instance<List<CibSevenEngineFacts>> engines,
       final Instance<BusinessCockpitEventPublisher> publisher) {
 
@@ -117,7 +117,7 @@ public class CibSevenCockpitProducer {
     * collects both shapes, the same way VanillaBP's own Quarkus integration collects the adapter
     * deployment services of a BPMS adapter.
    * <p>
-    * WHICH adapter ids those are is {@code MigrationAdapterProperties#adapterIdsOfType}, the same
+    * WHICH adapter ids those are is {@code VanillaBpSettings#adapterIdsOfType}, the same
     * answer the Spring Boot half reads through the platform's registrar support. Filtering the
     * configured types is not that answer. An id named in <code>prioritized-adapters</code> needs
     * no section of its own, and an application which configured nothing at all has the id the
@@ -135,7 +135,7 @@ public class CibSevenCockpitProducer {
   @Singleton
   @Unremovable
   public List<BusinessCockpitBpmsBridge> businessCockpitCibSevenBridges(
-      final MigrationAdapterProperties properties,
+      final VanillaBpSettings properties,
       final CibSevenQuarkusEngineRegistry engines,
       final CibSevenCockpitCustomizer customizer,
       final CibSevenWorkflowProcesses processes) {
