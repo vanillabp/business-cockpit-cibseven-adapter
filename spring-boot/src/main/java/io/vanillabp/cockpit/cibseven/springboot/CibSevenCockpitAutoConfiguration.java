@@ -14,10 +14,10 @@ import io.vanillabp.cockpit.cibseven.CibSevenCockpitCustomizer;
 import io.vanillabp.cockpit.cibseven.CibSevenCockpitWiring;
 import io.vanillabp.cockpit.cibseven.CibSevenWorkflowProcesses;
 import io.vanillabp.cockpit.extension.spi.BusinessCockpitEventPublisher;
-import io.vanillabp.integration.adapter.migration.config.MigrationAdapterProperties;
-import io.vanillabp.integration.adapter.spi.NameClashAvoidanceSupport;
-import io.vanillabp.integration.adapter.spi.workflowtask.WorkflowTaskWiring;
 import io.vanillabp.integration.extension.spi.ExtensionWiringService;
+import io.vanillabp.integration.extension.spi.settings.VanillaBpSettings;
+import io.vanillabp.integration.spi.IdentifierScoping;
+import io.vanillabp.integration.spi.workflowtask.WorkflowTaskClaims;
 
 /**
  * Registers the CIB seven half of the Business Cockpit extension on Spring Boot.
@@ -30,7 +30,7 @@ import io.vanillabp.integration.extension.spi.ExtensionWiringService;
  * extension does not compile against a platform integration.
  */
 @AutoConfiguration(afterName = "io.vanillabp.integration.processservice.SpringBootMigrationAdapterAutoConfiguration")
-@ConditionalOnBean(MigrationAdapterProperties.class)
+@ConditionalOnBean(VanillaBpSettings.class)
 @Import(CibSevenCockpitBeanRegistrar.class)
 public class CibSevenCockpitAutoConfiguration {
 
@@ -60,7 +60,7 @@ public class CibSevenCockpitAutoConfiguration {
    * Provides this extension's wiring service.
    *
    * @param processes The claimed processes
-   * @param workflowTaskWiring VanillaBP's registry, which answers whether a
+   * @param workflowTaskClaims VanillaBP's registry, which answers whether a
    *          <code>&#64;WorkflowService</code> claims a process
    * @param publisher The extension, which is told the user tasks of every wired model. It is
    *          resolved when the first model is wired
@@ -70,10 +70,10 @@ public class CibSevenCockpitAutoConfiguration {
   @Bean
   public ExtensionWiringService<BpmnModelInstance, CibSevenProcessingContext> businessCockpitCibSevenWiringService(
       final CibSevenWorkflowProcesses processes,
-      final WorkflowTaskWiring workflowTaskWiring,
+      final WorkflowTaskClaims workflowTaskClaims,
       final ObjectProvider<BusinessCockpitEventPublisher> publisher) {
 
-    return new CibSevenCockpitWiring(processes, workflowTaskWiring, publisher::getObject);
+    return new CibSevenCockpitWiring(processes, workflowTaskClaims, publisher::getObject);
 
   }
 
@@ -97,7 +97,7 @@ public class CibSevenCockpitAutoConfiguration {
   @Bean
   public CibSevenCockpitCustomizer businessCockpitCibSevenEngineCustomizer(
       final CibSevenWorkflowProcesses processes,
-      final NameClashAvoidanceSupport scoping,
+      final IdentifierScoping scoping,
       final ObjectProvider<CibSevenEngineFacts> engines,
       final ObjectProvider<BusinessCockpitEventPublisher> publisher) {
 
