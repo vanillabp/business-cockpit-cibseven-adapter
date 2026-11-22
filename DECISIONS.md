@@ -44,6 +44,10 @@ version moves with the other Business Cockpit extensions. If the adapter ever op
 for an older minor, this extension follows it the way the Camunda 8 extension follows the lines of
 the Camunda 8 adapter.
 
+*Changed on 2026-11-22 with the move to CIB seven 3.0. The adapter is now `2.0.0-3.0`, and the
+recipe pins `cibseven.version` at `3.0.0`. What the entry decides stays the same: one line, which
+follows the minor of the adapter.*
+
 ### 3. The code is made from the Camunda 7 extension, and a merge brings each change over
 
 **Partly superseded by decision 6.** The Camunda 7 adapter no longer has the groupId
