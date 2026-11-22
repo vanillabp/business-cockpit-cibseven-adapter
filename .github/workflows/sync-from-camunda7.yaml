@@ -67,20 +67,22 @@ jobs:
       # the Maven the other workflows use, see publish-snapshots.yaml for why it is not the 3.10
       # of the runner image
       - name: Use Maven 3.9
-        run: |
-          # Into a file and not through a pipe: a transfer which breaks halfway has already
-          # written to tar, so a repeat of curl could not mend it. Nine repeats wait about
-          # eight minutes, long enough for a 429 of Central to pass.
-          curl -fsSL --retry 9 --retry-all-errors --retry-max-time 600 --connect-timeout 20 --max-time 120 \
-            -o "$RUNNER_TEMP/apache-maven.tar.gz" \
-            https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.tar.gz
-          tar xzf "$RUNNER_TEMP/apache-maven.tar.gz" -C "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
+        uses: ./.github/actions/use-maven
       - uses: actions/setup-java@v6
         with:
           java-version: 25.0.5+8
           distribution: temurin
-          cache: maven
+      # The Maven repository of the newest run on main, read only. This job builds a branch
+      # which is not on main yet, so it does not write the cache.
+      - uses: actions/cache/restore@v6
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
+          restore-keys: |
+            maven-${{ hashFiles('**/pom.xml') }}-
+            maven-
+      # the cache above can hold old snapshots of our own, so they go and Maven fetches the newest
+      - uses: ./.github/actions/forget-cached-snapshots
       - name: Make the code again from the Camunda 7 extension
         id: sync
         env:
@@ -124,7 +126,7 @@ jobs:
         id: build
         if: "${{ steps.merge.outputs.conflicts == 'false' }}"
         continue-on-error: true
-        run: mvn -s .github/maven/settings.xml ${VBP_SNAPSHOTS_PROFILE} --batch-mode --no-transfer-progress --update-snapshots install
+        run: mvn -s .github/maven/settings.xml ${VBP_SNAPSHOTS_PROFILE} --batch-mode --no-transfer-progress install
       - name: Open the pull request
         if: "${{ steps.sync.outputs.changed == 'true' }}"
         env:
