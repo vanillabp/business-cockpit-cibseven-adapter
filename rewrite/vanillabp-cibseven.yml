@@ -171,7 +171,7 @@ recipeList:
   # adapter version below together, when the adapter raises it.
   - org.openrewrite.text.FindAndReplace:
       find: '<camunda.version>[^<]*</camunda.version>'
-      replace: '<cibseven.version>2.2.0</cibseven.version>'
+      replace: '<cibseven.version>3.0.0</cibseven.version>'
       caseSensitive: true
       regex: true
       filePattern: pom.xml
@@ -182,10 +182,10 @@ recipeList:
       regex: true
       filePattern: 'pom.xml;**/pom.xml'
   # The adapter's version is '<VanillaBP version>-<CIB seven minor>', for instance
-  # '2.0.0-2.2-SNAPSHOT'. This runs before the rule 'camunda7' -> 'cibseven' below.
+  # '2.0.0-3.0-SNAPSHOT'. This runs before the rule 'camunda7' -> 'cibseven' below.
   - org.openrewrite.text.FindAndReplace:
       find: '<camunda7-adapter.version>(\d+\.\d+\.\d+)(-SNAPSHOT)?</camunda7-adapter.version>'
-      replace: '<camunda7-adapter.version>$1-2.2$2</camunda7-adapter.version>'
+      replace: '<camunda7-adapter.version>$1-3.0$2</camunda7-adapter.version>'
       caseSensitive: true
       regex: true
       filePattern: pom.xml
