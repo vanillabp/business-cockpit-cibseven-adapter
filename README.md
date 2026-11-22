@@ -187,7 +187,7 @@ there.
 
 `release.yaml` is started by hand and publishes to Maven Central from a release branch.
 
-`nightly-build.yaml` runs `build.yaml` on `main` once a night, with `--update-snapshots`. So a
+`nightly-build.yaml` runs `build.yaml` on `main` once a night, with the newest snapshots. So a
 `main` which a new snapshot of the platform, of the cockpit or of the CIB seven adapter breaks is
 seen, even when nobody pushed here. A red night becomes one issue with the label `nightly-build`.
 
