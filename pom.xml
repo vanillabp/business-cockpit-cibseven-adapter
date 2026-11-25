@@ -13,7 +13,7 @@
 
   <groupId>io.vanillabp.businesscockpit</groupId>
   <artifactId>businesscockpit-cibseven-adapter-parent</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>VanillaBP Business Cockpit adapter for CIB seven</name>
   <description>Business Cockpit integration for CIB seven, built as a VanillaBP 2 extension.</description>
@@ -52,7 +52,7 @@
     <cibseven.version>3.0.0</cibseven.version>
     <!-- the Business Cockpit itself: extensions-commons is the platform-neutral half of
          this extension and is consumed as a published artifact, never copied -->
-    <business-cockpit.version>0.9.0-SNAPSHOT</business-cockpit.version>
+    <business-cockpit.version>1.0.0-SNAPSHOT</business-cockpit.version>
     <spring-boot.version>4.1.3</spring-boot.version>
     <quarkus.version>3.40.1.2</quarkus.version>
     <!-- where the build stops, the same number in every VanillaBP repository -->
